@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Water & Weight</title>
+<style>
+:root{--bg:#EDF3F4;--sf:#fff;--ink:#12262B;--mute:#5B7177;--water:#1B7F93;--wt:#7B3F6E;--line:#CFDDE0;--wb:#D8EEF2;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1B1F;--sf:#172A30;--ink:#E6F1F3;--mute:#8FA8AE;--water:#55C1D6;--wt:#D68FC6;--line:#2A424A;--wb:#17383F;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1B1F;--sf:#172A30;--ink:#E6F1F3;--mute:#8FA8AE;--water:#55C1D6;--wt:#D68FC6;--line:#2A424A;--wb:#17383F;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,sans-serif;line-height:1.4}
+html,body{height:100%;overflow:hidden}
+main{max-width:480px;height:100%;margin:0 auto;display:flex;flex-direction:column;position:relative;touch-action:pan-y pinch-zoom}
+.tabs{position:relative;display:flex;flex:none;background:var(--sf);border-radius:14px;padding:4px;margin:16px 16px 8px}
+.tabs button{position:relative;z-index:1;flex:1;border:0;background:none;color:var(--mute);font:600 15px inherit;font-family:inherit;padding:10px;border-radius:10px;transition:color .15s}
+.tabs button.on{color:var(--on,var(--bg))}
+.tabs i{position:absolute;z-index:0;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/3);border-radius:10px;background:var(--water);will-change:transform}
+body{touch-action:pan-y pinch-zoom}
+.pgr{flex:1;min-height:0;position:relative;overflow:hidden;overflow:clip;touch-action:pan-y pinch-zoom}
+.trk{display:flex;height:100%;will-change:transform}
+section{flex:0 0 100%;min-width:0;height:100%;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding:8px 16px 16px;touch-action:pan-y pinch-zoom}
+.card{background:var(--sf);border-radius:18px;padding:16px;margin-bottom:14px}
+h2{font-size:15px;font-weight:600;color:var(--mute);margin:0 0 8px}
+.big{font-size:56px;font-weight:800;line-height:1;letter-spacing:-.03em}
+.big small{font-size:22px;font-weight:600;color:var(--mute);letter-spacing:0}
+.bar{height:10px;border-radius:6px;background:var(--wb);margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--water);border-radius:6px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.add{border:0;border-radius:14px;background:var(--water);color:var(--on,var(--bg));font:800 20px inherit;font-family:inherit;padding:16px 4px;position:relative}
+.add .x{position:absolute;top:2px;right:8px;font-size:18px}
+.ghost{border:1.5px solid var(--water);background:none;color:var(--ink);border-radius:12px;font:600 14px inherit;font-family:inherit;padding:9px 14px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+input,select,.sel{font:600 17px inherit;font-family:inherit;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:10px 12px;width:100%;min-width:0}
+label{font-size:13px;color:var(--mute);display:block;margin-bottom:4px}
+.f{flex:1;min-width:110px}
+.pri{border:0;background:var(--water);color:var(--on,var(--bg));font:800 16px inherit;font-family:inherit;border-radius:12px;padding:12px 18px}
+svg{width:100%;height:auto;display:block}
+svg text{font:11px system-ui,sans-serif;fill:var(--mute)}
+.b1{fill:var(--water)}.gl{stroke:var(--ink);stroke-dasharray:4 4;opacity:.5}
+.ln{fill:none;stroke:var(--water);stroke-width:2.5}.dt{fill:var(--water)}
+.li{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.li button{border:0;background:none;color:var(--water);font-size:20px}
+.mute{color:var(--mute);font-size:14px}
+.bmi{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.bmih{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.bmin{font-size:34px;font-weight:700;letter-spacing:-.5px}
+.bmis{position:relative;height:14px;border-radius:7px;margin:16px 0 6px;background:linear-gradient(90deg,#4C9BE8 0 14%,#2E9E5B 14% 40%,#F2B84B 40% 60%,#E4572E 60% 100%)}
+.bmis i{position:absolute;top:50%;box-sizing:border-box;width:22px;height:22px;border-radius:50%;background:var(--sf);border:4px solid var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.35);transform:translate(-50%,-50%);transition:left .45s cubic-bezier(.22,1,.36,1);display:none}
+.bmit{position:relative;height:18px;font-size:12px;color:var(--mute);font-weight:600}
+.bmit span{position:absolute;transform:translateX(-50%)}
+.add:disabled{opacity:.5}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cd{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;background:var(--bg);color:var(--mute)}.cd small{font-size:10px;font-weight:400}.cd.ok{background:#2E9E5B;color:#fff}.cd.bad{background:#D0463C;color:#fff}.cd.td{outline:2px solid var(--ink)}.cw{font-size:12px;color:var(--mute);text-align:center}
+input[type=range]{padding:0;border:0;background:none;accent-color:var(--water);height:30px}
+input.hue{-webkit-appearance:none;appearance:none;width:100%;height:28px;margin:6px 0 0;cursor:pointer}
+input.hue::-webkit-slider-runnable-track{height:16px;border-radius:8px;background:linear-gradient(90deg,#f00,#ff0 16.67%,#0f0 33.33%,#0ff 50%,#00f 66.67%,#f0f 83.33%,#f00)}
+input.hue::-moz-range-track{height:16px;border-radius:8px;background:linear-gradient(90deg,#f00,#ff0 16.67%,#0f0 33.33%,#0ff 50%,#00f 66.67%,#f0f 83.33%,#f00)}
+input.hue::-webkit-slider-thumb{-webkit-appearance:none;box-sizing:border-box;width:28px;height:28px;margin-top:-6px;border-radius:50%;background:var(--water);border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.45)}
+input.hue::-moz-range-thumb{box-sizing:border-box;width:28px;height:28px;border-radius:50%;background:var(--water);border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.45)}
+.sel{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;cursor:pointer}
+.sel span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sel::after{content:"";flex:none;width:8px;height:8px;margin:-4px 2px 0 0;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg)}
+.ddo{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.5);animation:ddf .15s ease-out}
+.ddm{width:100%;max-width:340px;max-height:80vh;overflow:auto;background:var(--bg);border:1.5px solid var(--line);border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.45);animation:ddp .2s cubic-bezier(.22,1,.36,1)}
+.ddi{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;border:0;border-top:1px solid var(--line);background:none;color:var(--ink);font-size:18px;font-weight:600;font-family:inherit;text-align:left;padding:18px 20px;cursor:pointer}
+.ddi:first-child{border-top:0}
+.ddi:active{background:var(--wb)}
+.ddi::after{content:"";flex:none;box-sizing:border-box;width:22px;height:22px;border-radius:50%;border:2px solid var(--mute)}
+.ddi[aria-selected="true"]::after{border-color:var(--water);background:radial-gradient(circle,var(--water) 0 4.5px,transparent 5.5px)}
+@keyframes ddf{from{opacity:0}to{opacity:1}}
+@keyframes ddp{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.ddo,.ddm{animation:none}}
+</style><meta name="theme-color" content="#0E4756">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-maskable.png">
+<meta name="description" content="Track your daily water and weight. Works fully offline.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Water &amp; Weight">
+</head><body><main>
+<div class="tabs"><i id="ti"></i><button id="t0" class="on" onclick="tab(0)">💧 Water</button><button id="t1" onclick="tab(1)">⚖️ Weight</button><button id="t2" onclick="tab(2)">👤 Profile</button></div>
+
+<div class="pgr" id="pgr"><div class="trk" id="trk">
+<section id="s0">
+<div class="card"><h2>Today</h2><div class="big"><span id="tot">0</span> <small id="gl"></small></div><div class="bar"><i id="pg" style="width:0"></i></div><p class="mute" id="wm" style="margin:10px 0 0"></p></div>
+<div class="card"><h2 id="ah">Add water</h2><div class="grid" id="pr"></div><p class="mute" id="eh" style="display:none;margin:10px 0 0">Tap a button to remove it. Add a new one below, then tap Done.</p>
+<div class="row" id="oa"><div class="f"><label for="ca">Other amount</label><input id="ca" inputmode="decimal"></div><div class="f"><label for="cu2">Unit</label><select id="cu2"><option value="ml">ml</option><option value="dl">dl</option><option value="l">l</option></select></div><button class="pri" onclick="addC()">Add</button></div>
+<div class="row"><button class="ghost" id="eb" onclick="editP()">Edit buttons</button></div>
+<div class="row" id="pe" style="display:none"><div class="f"><label for="np" id="npl">Amount</label><input id="np" inputmode="decimal"></div><div class="f"><label for="nu">Unit</label><select id="nu"><option value="ml">ml</option><option value="dl">dl</option><option value="l">l</option></select></div><div style="display:flex;gap:8px"><button class="pri" onclick="addP()">Add button</button><button class="ghost" onclick="editP()">Done</button></div></div></div>
+<div class="card" id="wcard" onclick="openCal()" style="cursor:pointer"><h2 id="cu">Last 7 days</h2><div id="wc"></div></div>
+<div class="card"><h2>Today’s drinks</h2><div id="tl"></div></div>
+</section>
+
+<section id="s1">
+<div class="card"><h2>Current weight</h2><div class="big"><span id="cw">–</span> <small>kg</small></div><p class="mute" id="wd" style="margin:8px 0 0"></p><div class="bar" id="wbar" style="background:var(--line);display:none"><i id="wpg" style="background:var(--water);width:0"></i></div></div>
+<div class="card"><h2>Log this week’s weight</h2><div class="row" style="margin-top:0"><div class="f"><label for="kg">Weight (kg)</label><input id="kg" inputmode="decimal"></div></div><div class="row"><button class="pri" onclick="addW()">Save weight</button></div><p class="mute" style="margin:10px 0 0">Saving twice on the same day replaces that day’s weight.</p></div>
+<div class="card"><h2>Weight trend toward your goal (kg)</h2><div id="wt"></div></div>
+<div class="card"><h2>Entries</h2><div id="wl"></div></div>
+</section>
+
+<section id="s2">
+<div class="card"><h2>Your details</h2>
+<div class="row" style="margin-top:0"><div class="f"><label for="ag">Age</label><input id="ag" inputmode="numeric"></div><div class="f"><label for="ht">Height (cm)</label><input id="ht" inputmode="numeric"></div></div>
+<div class="row"><div class="f"><label for="sx">Gender</label><select id="sx"><option value="">Prefer not to say</option><option value="f">Female</option><option value="m">Male</option></select></div><div class="f"><label for="pw">Current weight (kg)</label><input id="pw" inputmode="decimal"></div></div>
+<div class="row"><div class="f"><label for="gw">Goal weight (kg)</label><input id="gw" inputmode="decimal"></div></div>
+<div class="bmi"><h2 style="margin:0 0 2px">BMI</h2><div class="bmih"><span class="bmin" id="bmiv">–</span><span id="bmil" style="font-weight:700;font-size:15px;text-align:right"></span></div><div class="bmis"><i id="bmk"></i></div><div class="bmit"><span style="left:14%">18,5</span><span style="left:40%">25</span><span style="left:60%">30</span></div><p class="mute" id="bmir" style="margin:8px 0 0"></p></div></div><div class="card"><h2>Interface color</h2><div style="display:flex;gap:10px;align-items:center;margin-bottom:8px"><span style="width:36px;height:36px;border-radius:10px;background:var(--water);flex:none"></span><span class="mute" id="chex"></span></div><label for="ch">Hue</label><input type="range" class="hue" id="ch" min="0" max="360" step="1" oninput="setC()"><div class="row"><button class="ghost" onclick="resetC()">Reset color</button></div></div>
+<div class="card"><h2>Backup</h2><p class="mute" style="margin:0 0 10px">Save a copy of your data to keep it safe or move it to a new phone. Restoring adds a saved copy to your current data. Where they overlap, the saved copy is used.</p><div class="row" style="margin-top:0"><button class="pri" onclick="dl()">Save backup</button><button class="ghost" onclick="$('upf').click()">Restore backup</button></div><input type="file" id="upf" accept=".json,application/json" style="display:none" onchange="ul(this)"><p class="mute" id="ds" style="margin:10px 0 0"></p></div>
+<div class="card"><h2>Reset</h2><p class="mute">Erases your drinks, weigh-ins and goal history so you can start fresh. Your height, gender, goal weight, quick buttons and color stay. This can’t be undone, so save a backup first if you want to keep your data.</p><button class="ghost" id="rs" onclick="resetP()" style="color:#D0463C;border-color:#D0463C">Reset my progress</button></div>
+</section>
+</div></div>
+</main>
+<div id="cal" style="display:none;position:fixed;inset:0;background:var(--bg);overflow:auto;z-index:20;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))"><div style="max-width:480px;margin:0 auto"><button class="ghost" onclick="closeCal()">Close</button><div class="card" style="margin-top:12px"><div class="row" style="justify-content:space-between;margin:0 0 12px"><button class="ghost" onclick="mv(-1)" aria-label="Previous month">‹</button><b id="cm"></b><button class="ghost" onclick="mv(1)" aria-label="Next month">›</button></div><div id="cg"></div><div class="row"><span class="mute"><span style="display:inline-block;width:12px;height:12px;border-radius:4px;background:#2E9E5B;vertical-align:-1px"></span> Goal reached &nbsp; <span style="display:inline-block;width:12px;height:12px;border-radius:4px;background:#D0463C;vertical-align:-1px"></span> Goal missed</span></div><p class="mute" id="cs">Numbers are liters. Today stays grey until you reach your goal. Days before your first logged drink are not counted.</p></div></div></div>
+<script>
+const K='waterweight1';
+let S={age:'',h:'',gw:'',sex:'',unit:'dl',goals:{},presets:[2,3,5],water:[],weight:[]},edit=false;
+try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+S.unit='dl';S.presets=S.presets.map(v=>typeof v==='number'?{dl:v,u:'dl'}:v);
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const $=i=>document.getElementById(i);
+const f=(n,d=1)=>Number(n).toFixed(d).replace('.',',');
+const fd=n=>Number.isInteger(n)?String(n):f(n,1);
+const U={ml:100,dl:1,l:.1};
+const fv=n=>{const x=n*U[S.unit];return S.unit==='ml'?String(Math.round(x)):S.unit==='dl'?String(Number(x.toFixed(1))).replace('.',','):String(Number(x.toFixed(2))).replace('.',',')};
+const fu=(dl,u)=>{const x=dl*U[u];return (u==='ml'?String(Math.round(x)):u==='dl'?String(Number(x.toFixed(1))):String(Number(x.toFixed(2)))).replace('.',',')+' '+u};
+const fl=n=>String(Number((n/10).toFixed(2))).replace('.',',');
+function setS(s){S.sex=s;save();renderW()}
+const p=s=>parseFloat(String(s).replace(',','.'));
+const day=t=>{const d=new Date(t);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const short=s=>s.slice(8)+'.'+s.slice(5,7)+'.';
+const curW=()=>S.weight.length?S.weight[S.weight.length-1].kg:null;
+function goal(){const w=curW(),a=+S.age,h=+S.h;if(!w||!a||!h)return null;let l=Math.sqrt(h*w/3600)*1.5;if(a>65||a<18)l*=.9;l*=S.sex==='m'?1.07:S.sex==='f'?.93:1;return Math.round(l*10*2)/2}
+function tab(n){if(n===curTab&&!raf)PG[n].scrollTo({top:0,behavior:'smooth'});else go(n)}
+function todayTotal(){const d=day(Date.now());return S.water.filter(e=>day(e.t)===d).reduce((a,e)=>a+e.dl,0)}
+function add(i){const g=goal(),b=todayTotal();S.water.push({t:Date.now(),dl:S.presets[i].dl});save();renderW();if(g&&b<g&&todayTotal()>=g)confetti()}
+function undo(){S.water.pop();save();renderW()}
+function addC(){const u=$('cu2').value,dl=p($('ca').value)/U[u];if(!(dl>0))return;const g=goal(),b=todayTotal();S.water.push({t:Date.now(),dl});$('ca').value='';save();renderW();if(g&&b<g&&todayTotal()>=g)confetti()}
+function rmE(t){S.water=S.water.filter(e=>e.t!==t);save();renderW()}
+let cy,cmn;
+function openCal(){const n=new Date();cy=n.getFullYear();cmn=n.getMonth();$('cal').style.display='block';drawCal()}
+function closeCal(){$('cal').style.display='none'}
+function mv(k){cmn+=k;if(cmn<0){cmn=11;cy--}if(cmn>11){cmn=0;cy++}drawCal()}
+function drawCal(){
+ $('cm').textContent=new Date(cy,cmn,1).toLocaleDateString([],{month:'long',year:'numeric'});
+ const tot={};S.water.forEach(e=>{const d=day(e.t);tot[d]=(tot[d]||0)+e.dl});
+ const first=S.water.length?day(Math.min(...S.water.map(e=>e.t))):null,cur=goal(),td=day(Date.now());
+ const lead=(new Date(cy,cmn,1).getDay()+6)%7,n=new Date(cy,cmn+1,0).getDate();
+ let h='<div class="cg">'+['M','T','W','T','F','S','S'].map(x=>`<div class="cw">${x}</div>`).join('')+'<div></div>'.repeat(lead);
+ for(let d=1;d<=n;d++){const k=cy+'-'+String(cmn+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'),t=tot[k]||0,g=S.goals[k]||cur;let c='';
+  if(g&&first&&k>=first&&k<=td){if(t>=g)c='ok';else if(k<td)c='bad'}
+  h+=`<div class="cd ${c} ${k===td?'td':''}">${d}${t?`<small>${fl(t)}</small>`:''}</div>`}
+ $('cg').innerHTML=h+'</div>';
+}
+function editP(){edit=!edit;$('pe').style.display=edit?'flex':'none';$('eb').parentNode.style.display=edit?'none':'flex';$('oa').style.display=edit?'none':'flex';$('eh').style.display=edit?'block':'none';$('ah').textContent=edit?'Edit buttons':'Add water';renderW()}
+function addP(){const u=$('nu').value,dl=Math.round(p($('np').value)/U[u]*1000)/1000;if(!(dl>0))return;if(!S.presets.some(o=>o.dl===dl&&o.u===u))S.presets.push({dl,u});S.presets.sort((a,b)=>a.dl-b.dl);$('np').value='';save();renderW()}
+function rmP(i){S.presets.splice(i,1);save();renderW()}
+function renderW(){
+ const g=goal(),t=todayTotal();
+ $('cu').textContent='Last 7 days (liters) · tap for calendar';
+ if(g&&S.goals[day(Date.now())]!==g){S.goals[day(Date.now())]=g;try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+
+ const d0=day(Date.now()),te=S.water.filter(e=>day(e.t)===d0).reverse();
+ $('tl').innerHTML=te.length?te.map(e=>`<div class="li"><span><b>${fl(e.dl)} l</b> <span class="mute">${new Date(e.t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span></span><button aria-label="Remove drink" onclick="rmE(${e.t})">×</button></div>`).join(''):'<p class="mute">Nothing logged yet today. Tap a button above to add your first drink.</p>';
+ $('tot').textContent=fl(t);
+ $('gl').textContent=g?'/ '+fl(g)+' l':'l';
+ $('pg').style.width=g?Math.min(100,t/g*100)+'%':'0';
+ $('wm').innerHTML=g?(t>=g?'Goal reached for today.':'Still '+fl(g-t)+' l to go.'):'<button class="ghost" onclick="tab(2)">Set up my daily goal</button>';
+ $('pr').innerHTML=S.presets.map((o,i)=>edit?`<button class="add" onclick="rmP(${i})">${fu(o.dl,o.u)}<span class="x">×</span></button>`:`<button class="add" onclick="add(${i})">+${fu(o.dl,o.u)}</button>`).join('');
+ const days=[],W=320,H=150;
+ for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d)}
+ const tot=days.map(d=>S.water.filter(e=>day(e.t)===day(d)).reduce((a,e)=>a+e.dl,0));
+ const mx=Math.max(...tot,g||0,10)*1.1,st=(W-20)/7,bw=28,L='SMTWTFS';
+ let s=`<svg viewBox="0 0 ${W} ${H}">`;
+ tot.forEach((v,i)=>{const h=v/mx*(H-30),x=10+i*st+(st-bw)/2;s+=`<rect class="b1" x="${x}" y="${H-22-h}" width="${bw}" height="${h}" rx="5"/><text x="${x+bw/2}" y="${H-6}" text-anchor="middle">${L[days[i].getDay()]}</text>`;if(v>0)s+=`<text x="${x+bw/2}" y="${H-26-h}" text-anchor="middle">${fl(v)}</text>`});
+ if(g){const y=H-22-g/mx*(H-30);s+=`<line class="gl" x1="6" x2="${W-6}" y1="${y}" y2="${y}"/>`}
+ $('wc').innerHTML=s+'</svg>';
+}
+function addW(){const kg=p($('kg').value),d=day(Date.now());if(!(kg>20&&kg<400))return;S.weight=S.weight.filter(e=>e.d!==d);S.weight.push({d,kg});S.weight.sort((a,b)=>a.d<b.d?-1:1);$('kg').value='';save();renderAll()}
+function rmW(d){S.weight=S.weight.filter(e=>e.d!==d);save();renderAll()}
+
+let spT=null;
+function autoP(){clearTimeout(spT);spT=setTimeout(saveP,700)}
+function saveP(){clearTimeout(spT);let ch=false;const a=$('ag').value.trim(),h=$('ht').value.trim(),x=$('sx').value,w=p($('pw').value),g=p($('gw').value);
+ if(a!==String(S.age||'')){S.age=a;ch=true}
+ if(h!==String(S.h||'')){S.h=h;ch=true}
+ if(x!==(S.sex||'')){S.sex=x;ch=true}
+ if(w>20&&w<400&&w!==curW()){const d=day(Date.now());S.weight=S.weight.filter(e=>e.d!==d);S.weight.push({d,kg:w});S.weight.sort((u,v)=>u.d<v.d?-1:1);ch=true}
+ if(g>20&&g<400&&g!==+S.gw){S.gw=g;ch=true}
+ if(!ch)return;save();renderAll()}
+function renderWt(){
+ const w=curW(),gw=+S.gw||null;
+ $('cw').textContent=w?f(w):'–';
+ $('wd').textContent=w&&gw?(Math.abs(w-gw)<.05?'You are at your goal weight.':f(Math.abs(w-gw))+' kg '+(w>gw?'to lose':'to gain')+' to reach '+f(gw)+' kg.'):(gw?'Goal: '+f(gw)+' kg':'Log a weight and set a goal weight.');
+ 
+ const st=S.weight.length?S.weight[0].kg:null,pb=$('wbar');
+ if(w&&gw&&st&&Math.abs(st-gw)>=.05){const pr=Math.max(0,Math.min(1,(st-w)/(st-gw)));pb.style.display='block';$('wpg').style.width=pr*100+'%'}else{pb.style.display='none'}
+ const E=S.weight;
+ if(E.length<2){$('wt').innerHTML='<p class="mute">Log at least two weights to see your trend.</p>'}
+ else{
+  const W=320,H=170,v=E.map(e=>e.kg),all=gw?[...v,gw]:v;
+  let lo=Math.min(...all)-1,hi=Math.max(...all)+1;
+  const X=i=>36+i*(W-48)/(E.length-1),Y=k=>12+(hi-k)/(hi-lo)*(H-40);
+  let s=`<svg viewBox="0 0 ${W} ${H}"><text x="2" y="${Y(hi-1)+4}">${f(hi-1)}</text><text x="2" y="${Y(lo+1)+4}">${f(lo+1)}</text>`;
+  if(gw)s+=`<line class="gl" x1="34" x2="${W-6}" y1="${Y(gw)}" y2="${Y(gw)}"/><text x="${W-6}" y="${Y(gw)-5}" text-anchor="end">Goal ${f(gw)} kg</text>`;
+  s+=`<polyline class="ln" points="${E.map((e,i)=>X(i)+','+Y(e.kg)).join(' ')}"/>`+E.map((e,i)=>`<circle class="dt" cx="${X(i)}" cy="${Y(e.kg)}" r="3.5"/>`).join('');
+  s+=`<text x="${X(E.length-1)}" y="${Y(E[E.length-1].kg)-8}" text-anchor="end">${f(E[E.length-1].kg)}</text><text x="36" y="${H-8}">${short(E[0].d)}</text><text x="${W-6}" y="${H-8}" text-anchor="end">${short(E[E.length-1].d)}</text></svg>`;
+  $('wt').innerHTML=s}
+ $('wl').innerHTML=E.length?[...E].reverse().slice(0,12).map(e=>`<div class="li"><span>${short(e.d)}${e.d.slice(0,4)} · <b>${f(e.kg)} kg</b></span><button aria-label="Delete entry" onclick="rmW('${e.d}')">×</button></div>`).join(''):'<p class="mute">No entries yet.</p>';
+}
+function renderAll(){const A=document.activeElement;if(A!==$('ag'))$('ag').value=S.age;if(A!==$('ht'))$('ht').value=S.h;$('sx').value=S.sex;if(A!==$('pw'))$('pw').value=curW()?f(curW()):'';if(A!==$('gw'))$('gw').value=S.gw?f(+S.gw):'';renderW();renderWt();renderBMI()}
+['ag','ht','pw','gw'].forEach(i=>{$(i).addEventListener('input',autoP);$(i).addEventListener('blur',saveP)});$('sx').addEventListener('change',saveP);
+function renderBMI(){const w=curW(),h=+String(S.h).replace(',','.')/100,ok=w&&h>1&&h<2.6,v=$('bmiv'),l=$('bmil'),m=$('bmk'),r=$('bmir');
+ if(!ok){v.textContent='–';l.textContent='Add your height and current weight';l.style.color='var(--mute)';m.style.display='none';r.textContent='';return}
+ const b=w/(h*h),c=b<18.5?['Underweight','#4C9BE8']:b<25?['Healthy weight','#2E9E5B']:b<30?['Overweight','#E0A21E']:['Obese','#E4572E'];
+ v.textContent=f(b);l.textContent=c[0];l.style.color=c[1];m.style.display='block';m.style.left=Math.max(0,Math.min(100,(b-15)/25*100))+'%';
+ r.textContent='Healthy range for your height: '+f(18.5*h*h)+'–'+f(24.9*h*h)+' kg'}
+
+let curTab=0,rsT=null;
+function resetP(){const b=$('rs');if(!rsT){b.textContent='Tap again to confirm reset';rsT=setTimeout(()=>{rsT=null;b.textContent='Reset my progress'},4000);return}clearTimeout(rsT);rsT=null;b.textContent='Reset my progress';S.water=[];S.weight=[];S.goals={};S.age='';save();renderAll()}
+function h2c(h){const k=n=>{const q=(n+h/60)%6;return Math.round(255*(1-Math.max(0,Math.min(q,4-q,1))))};return{r:k(5),g:k(3),b:k(1)}}
+function c2h(r,g,b){const mx=Math.max(r,g,b),d=mx-Math.min(r,g,b);if(!d)return 0;const h=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;return(Math.round(h*60)+360)%360}
+function lum(c){const l=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};return .2126*l(c.r)+.7152*l(c.g)+.0722*l(c.b)}
+function applyC(keep){const c=S.color,st=document.documentElement.style,ok=c&&typeof c.r==='number';
+ if(!ok){['--water','--wb','--on'].forEach(k=>st.removeProperty(k))}
+ else{st.setProperty('--water','rgb('+c.r+','+c.g+','+c.b+')');st.setProperty('--wb','rgba('+c.r+','+c.g+','+c.b+',.2)');st.setProperty('--on',lum(c)>.179?'#111':'#fff')}
+ const q=ok?c:{r:27,g:127,b:147};
+ if(keep!==true)$('ch').value=c2h(q.r,q.g,q.b);$('chex').textContent='Hue '+$('ch').value+'°'}
+function setC(){S.color=h2c(+$('ch').value);applyC(true);save()}
+function resetC(){delete S.color;applyC();save()}
+function confetti(){const c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50';document.body.appendChild(c);
+ const x=c.getContext('2d'),W=c.width=innerWidth,H=c.height=innerHeight,cols=['#1B7F93','#7B3F6E','#F2B84B','#E4572E','#2E9E5B','#55C1D6'];
+ const P=Array.from({length:320},()=>({x:W/2+(Math.random()-.5)*120,y:H*.55,vx:(Math.random()-.5)*9,vy:-Math.random()*8-4,s:5+Math.random()*6,r:Math.random()*6,vr:(Math.random()-.5)*.12,c:cols[Math.random()*cols.length|0]}));
+ const T=5200;let st=0,last=0;(function f(ts){if(!st){st=last=ts}const k=Math.min(3,(ts-last)/16.667);last=ts;x.clearRect(0,0,W,H);const a=Math.max(0,Math.min(1,(T-(ts-st))/1200));x.globalAlpha=a;
+  P.forEach(p=>{p.vy+=.07*k;p.x+=p.vx*k;p.y+=p.vy*k;p.vx*=Math.pow(.985,k);p.vy*=Math.pow(.992,k);p.r+=p.vr*k;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/3,p.s,p.s*.6);x.restore()});
+  if(ts-st<T)requestAnimationFrame(f);else c.remove()})(performance.now())}
+/* pager: finger-following swipe between tabs, each tab keeps its own scroll position */
+const pgr=$('pgr'),trk=$('trk'),ti=$('ti'),TB=[0,1,2].map(i=>$('t'+i)),PG=[0,1,2].map(i=>$('s'+i)),RM=matchMedia('(prefers-reduced-motion:reduce)');
+let W=pgr.clientWidth||1,X=0,raf=0,hl=-1,g=null;
+function setX(x){X=x;trk.style.transform='translate3d('+(-x)+'px,0,0)';const p=x/W;ti.style.transform='translateX('+Math.max(0,Math.min(2,p))*100+'%)';
+ const r=Math.max(0,Math.min(2,Math.round(p)));if(r!==hl){hl=r;TB.forEach((b,i)=>b.classList.toggle('on',i===r))}}
+function setPage(n){curTab=n;PG.forEach((e,i)=>e.toggleAttribute('inert',i!==n))}
+function go(n,v){n=Math.max(0,Math.min(2,n));setPage(n);cancelAnimationFrame(raf);raf=0;
+ const x0=X,x1=n*W,d=x1-x0;if(RM.matches||Math.abs(d)<.5){setX(x1);return}
+ const dur=Math.round(Math.max(180,Math.min(380,3*Math.abs(d)/Math.max(Math.abs(v||0),.8)))),t0=performance.now();
+ const f=ts=>{const k=Math.max(0,Math.min(1,(ts-t0)/dur));setX(x0+d*(1-Math.pow(1-k,3)));raf=k<1?requestAnimationFrame(f):0};raf=requestAnimationFrame(f)}
+pgr.addEventListener('touchstart',e=>{if(e.touches.length>1){g=null;return}
+ const t=e.touches[0],grab=!!raf;cancelAnimationFrame(raf);raf=0;
+ g={x:t.clientX,y:t.clientY,x0:X,lx:t.clientX,lt:e.timeStamp,v:0,tg:e.target,ax:grab?'x':null}},{passive:true});
+pgr.addEventListener('touchmove',e=>{if(!g)return;
+ if(e.touches.length>1){const s=g;g=null;if(s.ax==='x')go(Math.round(X/W));return}
+ const t=e.touches[0],dx=t.clientX-g.x,dy=t.clientY-g.y;
+ if(g.ax===null){if(Math.abs(dx)<6&&Math.abs(dy)<6)return;
+  if(g.tg.closest&&g.tg.closest('input[type=range],textarea')){g=null;return}
+  g.ax=Math.abs(dx)>Math.abs(dy)?'x':'y'}
+ if(g.ax!=='x')return;
+ const dt=e.timeStamp-g.lt;if(dt>0)g.v=.6*g.v+.4*((t.clientX-g.lx)/dt);g.lx=t.clientX;g.lt=e.timeStamp;
+ const r=Math.max((curTab-1)*W,Math.min((curTab+1)*W,g.x0-dx));
+ setX(r<0?r*.3:r>2*W?2*W+(r-2*W)*.3:r)},{passive:true});
+pgr.addEventListener('touchend',e=>{const s=g;g=null;if(!s||s.ax!=='x')return;
+ const dx=e.changedTouches[0].clientX-s.x,v=e.timeStamp-s.lt>80?0:s.v;let n=0;
+ if(Math.abs(v)>.3&&Math.abs(dx)>24)n=v<0?1:-1;else if(Math.abs(dx)>W*.05)n=dx<0?1:-1;
+ go(curTab+n,v)},{passive:true});
+pgr.addEventListener('touchcancel',()=>{const s=g;g=null;if(s&&s.ax==='x')go(Math.round(X/W))},{passive:true});
+new ResizeObserver(()=>{const w=pgr.clientWidth||1;if(w===W)return;W=w;if(!g&&!raf)setX(curTab*W)}).observe(pgr);
+setPage(0);setX(0);
+async function dl(){const data=JSON.stringify({app:'water-weight',version:1,exported:new Date().toISOString(),age:S.age,h:S.h,gw:S.gw,sex:S.sex,presets:S.presets,goals:S.goals,water:S.water,weight:S.weight,color:S.color||null},null,1),name='water-weight-'+day(Date.now())+'.json';
+ try{const d=await claude.use('downloads');if(d){await d.save({filename:name,data});$('ds').textContent='Backup saved.';return}}catch(e){if(e&&e.code==='declined'){$('ds').textContent='Saving cancelled.';return}}
+ try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();a.remove();$('ds').textContent='Backup saved.'}catch(e){$('ds').textContent='Couldn’t save the backup here.'}}
+function ul(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!j||j.app!=='water-weight'||!Array.isArray(j.water)||!Array.isArray(j.weight))throw 0;
+ const w=new Map();[...S.water,...j.water].forEach(e=>{if(e&&e.t&&e.dl>0)w.set(e.t+'_'+e.dl,e)});
+ const g=new Map();[...S.weight,...j.weight].forEach(e=>{if(e&&e.d&&e.kg>0)g.set(e.d,e)});
+ S.water=[...w.values()].sort((a,b)=>a.t-b.t);S.weight=[...g.values()].sort((a,b)=>a.d<b.d?-1:1);S.goals=Object.assign({},j.goals||{},S.goals);
+ ['age','h','gw','sex'].forEach(k=>{if(j[k]!==undefined&&j[k]!=='')S[k]=j[k]});
+ if(Array.isArray(j.presets)){const a=j.presets.map(v=>typeof v==='number'?{dl:v,u:'dl'}:v).filter(o=>o&&o.dl>0&&U[o.u]);if(a.length)S.presets=a}
+ if(j.color&&typeof j.color.r==='number')S.color=j.color;
+ save();applyC();renderAll();$('ds').textContent='Backup restored: '+j.water.length+' drinks and '+j.weight.length+' weigh-ins.'}catch(e){$('ds').textContent='That file isn’t a backup from this app.'}inp.value=''};r.readAsText(f)}
+
+/* custom dropdowns: styled menu instead of the system select popup */
+(function(){
+ const nd=Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value');let ov=null;
+ function close(){if(ov){ov.remove();ov=null;document.removeEventListener('keydown',esc)}}
+ function esc(e){if(e.key==='Escape')close()}
+ function open(sel,b){close();ov=document.createElement('div');ov.className='ddo';
+  const m=document.createElement('div');m.className='ddm';m.setAttribute('role','listbox');
+  [...sel.options].forEach(o=>{const i=document.createElement('button');i.type='button';i.className='ddi';i.setAttribute('role','option');i.setAttribute('aria-selected',o.value===sel.value);i.textContent=o.text;
+   i.onclick=()=>{const ch=o.value!==sel.value;sel.value=o.value;close();if(ch)sel.dispatchEvent(new Event('change',{bubbles:true}))};m.appendChild(i)});
+  ov.appendChild(m);ov.addEventListener('click',e=>{if(e.target===ov)close()});
+  document.body.appendChild(ov);document.addEventListener('keydown',esc)}
+ document.querySelectorAll('select').forEach(sel=>{
+  const b=document.createElement('button'),t=document.createElement('span');b.type='button';b.className='sel';b.id='dd_'+sel.id;b.setAttribute('aria-haspopup','listbox');b.appendChild(t);
+  const lab=document.querySelector('label[for="'+sel.id+'"]');if(lab)lab.htmlFor=b.id;
+  const sync=()=>{const o=sel.options[sel.selectedIndex];t.textContent=o?o.text:''};
+  Object.defineProperty(sel,'value',{configurable:true,get(){return nd.get.call(sel)},set(v){nd.set.call(sel,v);sync()}});
+  sel.style.display='none';sel.after(b);sync();b.addEventListener('click',()=>open(sel,b))});
+})();
+applyC();
+
+renderAll();
+</script><script>
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+</script>
+</body></html>
